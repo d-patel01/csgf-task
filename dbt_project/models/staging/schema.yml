@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_assessments
+    description: >
+      1:1 view of raw_assessments with snake_case names. No filters, joins, or
+      derived metrics — those happen in intermediate. Includes district and
+      state aggregate rows; downstream filters to agency_type='School'.
+    columns:
+      - name: school_code
+        description: >
+          Source FullCode = CountyCode || DistrictCode || SiteCode (9 chars
+          for school-level rows). Matches stg_enrollment.school_code on the
+          enrollment side.
+      - name: subject_raw
+        description: >
+          Raw IndicatorSubtype value: 'Composite', 'ELA', 'Mathematics',
+          'History', or 'Science'. Mapped to canonical subject names downstream
+          (Mathematics → Math).
+      - name: pct_advanced
+        description: "% of students at the Advanced performance level."
+      - name: pct_proficient_only
+        description: >
+          % of students at the Proficient performance level (NOT including
+          Advanced). The headline "% proficient" metric is pct_advanced +
+          pct_proficient_only, derived in intermediate.
+      - name: indicator_value_raw
+        description: >
+          Oklahoma's custom A–F school-grading indicator value. NOT a proficiency
+          rate — included only so a null in this column can be used as one
+          potential signal of explicit suppression downstream.
+
+  - name: stg_enrollment
+    description: >
+      1:1 view of raw_enrollment with the compound join key constructed.
+      Stays wide (one row per school, grade columns alongside).
+    columns:
+      - name: school_code
+        description: >
+          Compound key: District Code || zero-padded School Code = 9 chars.
+          Matches stg_assessments.school_code on the assessment side.
+        tests:
+          - not_null
+          - unique
+      - name: grade_03
+        description: October 1, 2024 enrollment count for grade 3.
+      - name: grade_04
+        description: October 1, 2024 enrollment count for grade 4.
+      - name: grade_05
+        description: October 1, 2024 enrollment count for grade 5.
+      - name: grade_06
+        description: October 1, 2024 enrollment count for grade 6.
+      - name: grade_07
+        description: October 1, 2024 enrollment count for grade 7.
+      - name: grade_08
+        description: October 1, 2024 enrollment count for grade 8.

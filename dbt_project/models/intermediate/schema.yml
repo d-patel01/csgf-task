@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: int_enrollment_long
+    description: >
+      Enrollment unpivoted from wide to long, restricted to grades 3–8 with
+      enrollment > 0. Defines the "should-have-data" universe that the
+      suppression flag is anchored to.
+    columns:
+      - name: school_code
+        description: Compound (district_code || school_site_code) join key.
+      - name: grade
+        description: "Grade as a 2-char string: '03' through '08'."
+      - name: enrollment
+        description: October 1, 2024 enrollment count for this school × grade.
+
+  - name: int_school_subject_grade
+    description: >
+      The grain at which suppression is detected: one row per (school × subject
+      × grade) the school is expected to have based on enrollment. Surfaces
+      both is_explicitly_suppressed (null metric in source) and
+      is_structurally_suppressed (no row in source at all).
+    columns:
+      - name: school_code
+        description: Compound join key.
+      - name: subject
+        description: "Either 'ELA' or 'Math'."
+      - name: grade
+        description: "'03' through '08'."
+      - name: enrollment
+        description: October 1, 2024 enrollment for this school × grade.
+      - name: pct_proficient
+        description: >
+          % at Proficient or Advanced for this school × subject × grade.
+          NULL when is_suppressed = true.
+      - name: is_explicitly_suppressed
+        description: >
+          True when the source row exists but has null IndicatorValue,
+          Advanced, or Proficient. Defensive — typically false in the 2024–25
+          file but defends against future data drift.
+      - name: is_structurally_suppressed
+        description: >
+          True when no source row exists for this (school, subject, grade) —
+          the more common form of suppression. Detected by LEFT JOIN miss.
+      - name: is_suppressed
+        description: "is_explicitly_suppressed OR is_structurally_suppressed."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [school_code, subject, grade]

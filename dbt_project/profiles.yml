@@ -1,0 +1,7 @@
+csgf_ok_task:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../duckdb/csgf.duckdb
+      threads: 4

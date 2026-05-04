@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: school_subject_proficiency
+    description: >
+      Deliverable mart. One row per (Oklahoma school × subject) for ELA and
+      Math, SY 2024–25. Surfaces an enrollment-weighted % proficient across
+      grades 3–8 and a 4-tier suppression flag indicating how complete the
+      school-level result is.
+    columns:
+      - name: school_code
+        description: >
+          Compound key (District Code || zero-padded School Code = 9 chars).
+          Matches the assessment file's FullCode for school-level rows.
+        tests:
+          - not_null
+      - name: school_name
+        description: School name (pulled through from assessment side).
+      - name: district_name
+        description: District name.
+      - name: subject
+        description: "Either 'ELA' or 'Math'."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['ELA', 'Math']
+      - name: grades_with_data
+        description: >
+          Count of grades 3–8 (within the school's enrollment universe) that
+          have non-suppressed assessment data. Maximum = grades_in_universe.
+      - name: grades_in_universe
+        description: >
+          Count of grades 3–8 the school actually serves (enrollment > 0 per
+          October 2024 ORR file). The denominator for the suppression flag.
+      - name: pct_proficient
+        description: >
+          Enrollment-weighted % of students at Proficient or Advanced across
+          grades 3–8 with non-suppressed data:
+            Σ(grade_pct × grade_enrollment) / Σ(grade_enrollment).
+          NULL when grades_with_data = 0. October 2024 enrollment is used as
+          a proxy for tested-n; a small drift between October enrollment and
+          spring testing populations is expected but minor.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 100
+                inclusive: true
+      - name: enrollment_with_data
+        description: Sum of enrollment across non-suppressed grades only.
+      - name: enrollment_in_universe
+        description: Total enrollment across all grades 3–8 the school serves.
+      - name: suppression_flag
+        description: >
+          Four tiers:
+            Complete             — every served grade has data
+            Partial              — at least one grade missing, coverage ≥ 50%
+            Severely Suppressed  — coverage < 50%
+            No Data              — zero grades have data.
+          The 50% threshold for Severely Suppressed is an intentional
+          choice, not derived. grades_with_data and grades_in_universe can
+          differ — the difference is the count of suppressed grades.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Complete', 'Partial', 'Severely Suppressed', 'No Data']
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [school_code, subject]

@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: oklahoma
+    schema: main
+    description: >
+      Oklahoma 2024–25 raw inputs loaded by prep/load_raw.py. Source freshness
+      checks intentionally omitted: these are static annual data drops with no
+      real-time ingestion or loaded_at timestamp.
+    tables:
+      - name: raw_assessments
+        description: >
+          Oklahoma school-level proficiency results for SY 2024–25. One row per
+          (school × subject × grade × subgroup) including district and state
+          aggregates. % proficient = Advanced + Proficient (NOT IndicatorValue,
+          which is the OK A–F grading score).
+      - name: raw_enrollment
+        description: >
+          Oklahoma October 1, 2024 enrollment counts by school × grade
+          ("School Totals by Grade" sheet of the ORR file). One row per school.
+          Grade columns are wide (GR 03 through GR 12, with a typo "AS GR 11"
+          for grade 11).
