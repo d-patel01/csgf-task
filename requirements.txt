@@ -1,4 +1,5 @@
 duckdb
+duckdb-cli
 dbt-duckdb
 pandas
 openpyxl
