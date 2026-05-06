@@ -75,8 +75,13 @@ csgf-ok-task/
 │   │   └── marts/             school_subject_proficiency (table)
 │   └── tests/                 Singular tests
 │
-└── analysis/
-    └── suppression_analysis.py    Computes the numbers cited in analysis.md
+├── analysis/
+│   └── suppression_analysis.py    Computes the numbers cited in analysis.md
+│
+└── scripts/
+    └── verify.py                  End-to-end smoke test (20 invariants).
+                                   Run after `dbt build` to confirm everything
+                                   matches the documented behavior.
 ```
 
 ## The dbt models at a glance

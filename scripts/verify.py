@@ -1,12 +1,12 @@
 """End-to-end verification: prints PASS/FAIL on every key invariant.
 
 Run from the project root after `dbt build`:
-    .venv/Scripts/python verify.py
+    .venv/Scripts/python scripts/verify.py
 """
 from pathlib import Path
 import duckdb
 
-DB = Path(__file__).resolve().parent / "duckdb" / "csgf.duckdb"
+DB = Path(__file__).resolve().parent.parent / "duckdb" / "csgf.duckdb"
 con = duckdb.connect(str(DB), read_only=True)
 
 results = []  # (label, passed, detail)
