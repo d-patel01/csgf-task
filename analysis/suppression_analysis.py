@@ -1,12 +1,15 @@
 """Suppression analysis + performance summary on the school_subject_proficiency mart.
 
-Computes the numbers cited in analysis.md:
-  - Suppression flag distribution by subject
-  - Enrollment-weighted coverage (% of students in non-suppressed schools)
-  - State-level proficiency two ways (all schools vs. Complete-only) — supports
-    the "depends on the question" recommendation with evidence
-  - Distribution stats (median, P25, P75, etc.) for the non-technical summary
-  - Small-school vs large-school suppression breakdown
+Prints the eight blocks of numbers cited in analysis.md:
+  1. Suppression flag distribution by subject (with % of subject)
+  2. Suppression flag totals (both subjects combined)
+  3. Enrollment coverage by suppression tier
+  4. State-level proficiency two ways (all schools vs. Complete-only) — supports
+     the "depends on the question" recommendation with evidence
+  5. Distribution of pct_proficient (median, P25, P75, etc.)
+  6. Suppression by school size bucket
+  7. Median pct_proficient: Complete vs. Partial schools
+  8. Example schools at top / median / bottom for the non-technical narrative
 
 Run from the project root:
     .venv/Scripts/python analysis/suppression_analysis.py

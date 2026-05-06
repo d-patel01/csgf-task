@@ -1,5 +1,11 @@
 # CLAUDE.md
 
+> Configuration file used by Claude Code (the AI coding assistant) during this
+> project. Auto-loaded into the model's context at session start. Not part of
+> the deliverable — included in the repo so the development workflow is
+> reproducible. Reviewers can skip this file; the project overview also lives
+> in `README.md`.
+
 ## Project overview
 
 This is a 2-hour performance task for the Charter School Growth Fund (CSGF) Analytics Engineer role. We load Oklahoma 2024–25 assessment + enrollment data into DuckDB, build a dbt model at school×subject grain (% proficient grades 3–8 for ELA and Math, with a suppression flag), analyze suppression impact, and write a non-technical performance summary.

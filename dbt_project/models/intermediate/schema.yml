@@ -35,9 +35,11 @@ models:
           NULL when is_suppressed = true.
       - name: is_explicitly_suppressed
         description: >
-          True when the source row exists but has null IndicatorValue,
-          Advanced, or Proficient. Defensive — typically false in the 2024–25
-          file but defends against future data drift.
+          True when the source row exists but has null Advanced or Proficient
+          (so pct_proficient cannot be computed). Defensive — typically false
+          in the 2024–25 file but defends against future data drift.
+          IndicatorValue is deliberately NOT checked here; it's the OK A–F
+          school-grading score, not a proficiency component.
       - name: is_structurally_suppressed
         description: >
           True when no source row exists for this (school, subject, grade) —

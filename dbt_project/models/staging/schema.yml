@@ -27,8 +27,9 @@ models:
       - name: indicator_value_raw
         description: >
           Oklahoma's custom A–F school-grading indicator value. NOT a proficiency
-          rate — included only so a null in this column can be used as one
-          potential signal of explicit suppression downstream.
+          rate; the headline "% proficient" metric is pct_advanced +
+          pct_proficient_only. Surfaced here for documentation only — downstream
+          models do not use it.
 
   - name: stg_enrollment
     description: >

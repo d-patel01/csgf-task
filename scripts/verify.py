@@ -39,16 +39,20 @@ for t in [
 
 
 # ---------------------------------------------------------------------------
-# 2. Row counts in expected ranges
+# 2. Row counts
+# 252,957 / 1,780 are file-fingerprints (specific to the SY 2024-25 source
+# files we loaded), not pipeline invariants. A miss here means "different
+# input file," not a pipeline bug. The mart > 2,000 check is the structural
+# invariant.
 # ---------------------------------------------------------------------------
 print("\n--- 2. Row counts ---")
 ra = con.execute("SELECT COUNT(*) FROM raw_assessments").fetchone()[0]
 re_ = con.execute("SELECT COUNT(*) FROM raw_enrollment").fetchone()[0]
 mart = con.execute("SELECT COUNT(*) FROM school_subject_proficiency").fetchone()[0]
 
-check("raw_assessments has 252,957 rows",  ra == 252957, f"got {ra:,}")
-check("raw_enrollment has 1,780 rows",     re_ == 1780,  f"got {re_:,}")
-check("mart has > 2,000 rows",             mart > 2000,  f"got {mart:,}")
+check("raw_assessments has 252,957 rows (file fingerprint)", ra == 252957, f"got {ra:,}")
+check("raw_enrollment has 1,780 rows (file fingerprint)",    re_ == 1780, f"got {re_:,}")
+check("mart has > 2,000 rows",                               mart > 2000, f"got {mart:,}")
 
 
 # ---------------------------------------------------------------------------
