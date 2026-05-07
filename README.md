@@ -45,7 +45,7 @@ Cross-platform tip: on macOS/Linux replace `.venv/Scripts/` with `.venv/bin/`.
 ## Project structure
 
 ```
-csgf-ok-task/
+csgf-task/
 ├── CLAUDE.md                  Project context + behavioral guidelines
 ├── analysis.md                Deliverable writeup (data prep notes, suppression
 │                              analysis, performance summary, AI use notes)
